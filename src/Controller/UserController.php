@@ -33,7 +33,7 @@ class UserController extends AbstractController
         $user = new User();
         $user->setEmail("admin@gmail.com");
         $user->setRoles(['ROLE_ADMIN']);
-        $plainPassword = 'ryanpass';
+        $plainPassword = 'admin';
         $encoded = $encoder->encodePassword($user, $plainPassword);
         $user->setPassword($encoded);
 
