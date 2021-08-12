@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Category;
@@ -10,13 +12,17 @@ use App\Entity\Category;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/category", name="category")
+     * @Route("/categories", name="app_categories")
      */
     public function index(): Response
     {
-        return $this->render('category/index.html.twig', [
-            'controller_name' => 'CategoryController',
-        ]);
+        if($this->getUser() != null && in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            return $this->render('category/index.html.twig', [
+                'controller_name' => 'CategoryController',
+            ]);
+        }
+
+        return $this->redirectToRoute('app_login');
     }
 
     /**

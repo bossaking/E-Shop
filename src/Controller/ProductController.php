@@ -12,7 +12,7 @@ use App\Entity\Category;
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/products", name="app-products")
+     * @Route("/products", name="app_products")
      */
     public function index(): Response
     {
