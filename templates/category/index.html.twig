@@ -3,7 +3,31 @@
 {% block title %}{{ parent() }} - Categories{% endblock %}
 
 {% block content %}
-    <h1>Categories</h1>
+    <div class="content">
 
-    {% block page_contents %}{% endblock %}
+        <div class="table">
+            <button type="button" class="btn btn-success">Add new category</button>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <th scope="row">{{ category.getId() }}</th>
+                        <td>{{ category.getName() }}</td>
+                        <td>{{ category.getDescription() }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 {% endblock %}

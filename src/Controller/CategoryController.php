@@ -16,13 +16,17 @@ class CategoryController extends AbstractController
      */
     public function index(): Response
     {
-        if($this->getUser() != null && in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
-            return $this->render('category/index.html.twig', [
-                'controller_name' => 'CategoryController',
-            ]);
+        if($this->getUser() == null || !in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
+            return $this->redirectToRoute('app_login');
         }
 
-        return $this->redirectToRoute('app_login');
+        $repository = $this->getDoctrine()->getRepository(Category::class);
+
+        $categories = $repository->findAll();
+
+        return $this->render('category/index.html.twig', [
+            'categories' => $categories,
+        ]);
     }
 
     /**

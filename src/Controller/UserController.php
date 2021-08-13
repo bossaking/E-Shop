@@ -26,23 +26,10 @@ class UserController extends AbstractController
      */
     public function createUser(UserPasswordEncoderInterface $encoder): Response
     {
-        // you can fetch the EntityManager via $this->getDoctrine()
-        // or you can add an argument to the action: createProduct(EntityManagerInterface $entityManager)
-        $entityManager = $this->getDoctrine()->getManager();
-
         $user = new User();
-        $user->setEmail("admin@gmail.com");
-        $user->setRoles(['ROLE_ADMIN']);
-        $plainPassword = 'admin';
+        $plainPassword = 'user1';
         $encoded = $encoder->encodePassword($user, $plainPassword);
-        $user->setPassword($encoded);
 
-        // tell Doctrine you want to (eventually) save the User (no queries yet)
-        $entityManager->persist($user);
-
-        // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
-
-        return new Response('Saved new user with id '.$user->getId());
+        return new Response($encoded);
     }
 }
