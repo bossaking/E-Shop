@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Delete category{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <form method="post" class="category-form">
+
+            <h1>Delete category</h1>
+
+            <hr>
+
+            <div class="mb-3">
+                <label for="inputName">Name</label>
+                <input readonly type="text" value="{{ name }}" name="name" id="inputName" class="form-control" autocomplete="name">
+            </div>
+
+            <div class="mb-3">
+                <label for="inputDescription">Description</label>
+                <input readonly type="text" value="{{ description }}" name="description" id="inputDescription" class="form-control" autocomplete="description">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Delete</button>
+            <a href="{{ path('app_categories') }}" class="btn btn-danger">Cancel</a>
+
+        </form>
+
+    </div>
+{% endblock %}

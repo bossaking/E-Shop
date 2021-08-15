@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Edit category{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <form method="post" class="category-form">
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <h1>Edit category</h1>
+
+            <hr>
+
+            <div class="mb-3">
+                <label for="inputName">Name</label>
+                <input type="text" value="{{ name }}" name="name" id="inputName" class="form-control" autocomplete="name" required autofocus>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputDescription">Description</label>
+                <input type="text" value="{{ description }}" name="description" id="inputDescription" class="form-control" autocomplete="description" required>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save</button>
+            <a href="{{ path('app_categories') }}" class="btn btn-danger">Cancel</a>
+
+        </form>
+
+    </div>
+{% endblock %}

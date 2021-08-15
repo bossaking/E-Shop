@@ -11,10 +11,18 @@ use App\Entity\Category;
 
 class ProductController extends AbstractController
 {
+
     /**
-     * @Route("/products", name="app_products")
+     * @Route("/", name="app_products")
      */
-    public function index(): Response
+    public function index(): Response{
+        return $this->getProducts();
+    }
+
+    /**
+     * @Route("/products", name="get_products")
+     */
+    public function getProducts(): Response
     {
         return $this->render('product/index.html.twig', [
             'controller_name' => 'ProductController',

@@ -6,7 +6,7 @@
     <div class="content">
 
         <div class="table">
-            <button type="button" class="btn btn-success">Add new category</button>
+            <a type="button" href="{{ path('add_category') }}" class="btn btn-success">Add new category</a>
 
             <table class="table">
                 <thead>
@@ -23,6 +23,10 @@
                         <th scope="row">{{ category.getId() }}</th>
                         <td>{{ category.getName() }}</td>
                         <td>{{ category.getDescription() }}</td>
+                        <td>
+                            <a href="{{ path('edit_category', {'id': category.getId()}) }}" class="btn btn-primary">Edit</a> |
+                            <a href="{{ path('delete_category', {'id': category.getId()}) }}" class="btn btn-danger">Delete</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

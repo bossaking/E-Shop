@@ -112,6 +112,18 @@
     "phar-io/version": {
         "version": "3.1.0"
     },
+    "php-flasher/flasher": {
+        "version": "v0.4.8"
+    },
+    "php-flasher/flasher-notyf": {
+        "version": "v0.4.8"
+    },
+    "php-flasher/flasher-notyf-symfony": {
+        "version": "v0.4.8"
+    },
+    "php-flasher/flasher-symfony": {
+        "version": "v0.4.8"
+    },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
     },
