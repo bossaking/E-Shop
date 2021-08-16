@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,6 +36,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CartPosition::class, mappedBy="User", orphanRemoval=true)
+     */
+    private $cartPositions;
+
+    public function __construct()
+    {
+        $this->cartPositions = new ArrayCollection();
+    }
+    
 
     public function getId(): ?int
     {
@@ -122,5 +135,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|CartPosition[]
+     */
+    public function getCartPositions(): Collection
+    {
+        return $this->cartPositions;
+    }
+
+    public function addCartPosition(CartPosition $cartPosition): self
+    {
+        if (!$this->cartPositions->contains($cartPosition)) {
+            $this->cartPositions[] = $cartPosition;
+            $cartPosition->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartPosition(CartPosition $cartPosition): self
+    {
+        if ($this->cartPositions->removeElement($cartPosition)) {
+            // set the owning side to null (unless already changed)
+            if ($cartPosition->getUser() === $this) {
+                $cartPosition->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -53,7 +53,7 @@
                         <td>{{ product.getCategory().getName() }}</td>
                         {% if app.user != null %}
                         <td>
-                            <a href="#" class="btn btn-info">Add to cart</a>
+                            <a href="{{ path('add_to_cart', {'id': product.getId()}) }}" class="btn btn-info">Add to cart</a>
                             {% if 'ROLE_ADMIN' in app.user.roles %}
                                 | <a href="{{ path('edit_product', {'id': product.getId()}) }}" class="btn btn-primary">Edit</a> |
                                 <a href="{{ path('delete_product', {'id': product.getId()}) }}" class="btn btn-danger">Delete</a>

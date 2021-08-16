@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,12 +40,19 @@ class Product
      */
     private $category;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CartPosition::class, mappedBy="Product", orphanRemoval=true)
+     */
+    private $cartPositions;
+
+
     public function __construct($name, $price, $description, $category)
     {
         $this->name = $name;
         $this->price = $price;
         $this->description = $description;
         $this->category = $category;
+        $this->cartPositions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,6 +104,36 @@ class Product
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CartPosition[]
+     */
+    public function getCartPositions(): Collection
+    {
+        return $this->cartPositions;
+    }
+
+    public function addCartPosition(CartPosition $cartPosition): self
+    {
+        if (!$this->cartPositions->contains($cartPosition)) {
+            $this->cartPositions[] = $cartPosition;
+            $cartPosition->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartPosition(CartPosition $cartPosition): self
+    {
+        if ($this->cartPositions->removeElement($cartPosition)) {
+            // set the owning side to null (unless already changed)
+            if ($cartPosition->getProduct() === $this) {
+                $cartPosition->setProduct(null);
+            }
+        }
 
         return $this;
     }

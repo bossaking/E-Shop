@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Flasher\Notyf\Prime\NotyfFactory;
 use phpDocumentor\Reflection\Types\Boolean;
 use phpDocumentor\Reflection\Types\This;
@@ -125,11 +126,10 @@ class CategoryController extends AbstractController
      */
     public function deleteCategory(Request $request, Category $category, NotyfFactory $flasher): Response{
 
+        $name = $category->getName();
+        $description = $category->getDescription();
+
         if($request->getMethod() == Request::METHOD_GET) {
-
-            $name = $category->getName();
-            $description = $category->getDescription();
-
 
             return $this->render('category/delete.html.twig', [
                 'name' => $name,
@@ -140,7 +140,16 @@ class CategoryController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($category);
-            $entityManager->flush();
+            try{
+                $entityManager->flush();
+            }catch(ForeignKeyConstraintViolationException $ex) {
+                $flasher->addError("Cannot delete the category. Firstly you need to delete all products in this category.");
+                return $this->render('category/delete.html.twig', [
+                    'name' => $name,
+                    'description' => $description
+                ]);
+            }
+
 
             $flasher->addSuccess('Data has been deleted successfully!');
             return $this->redirectToRoute('app_categories');
