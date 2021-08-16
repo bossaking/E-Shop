@@ -10,6 +10,7 @@
 
 .category-form{
     margin: auto;
+    font-family: 'Oswald', sans-serif;
 }
 
 .category-filter{
@@ -23,4 +24,8 @@
 
 .category-field{
     width: 100%;
+}
+
+.table{
+    font-family: 'Inconsolata', monospace;
 }

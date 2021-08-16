@@ -33,7 +33,6 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Price</th>
                     <th scope="col">Description</th>
@@ -46,7 +45,6 @@
                 <tbody>
                 {% for product in products %}
                     <tr>
-                        <th scope="row">{{ product.getId() }}</th>
                         <td>{{ product.getName() }}</td>
                         <td>{{ product.getPrice() }} $</td>
                         <td>{{ product.getDescription() }}</td>
