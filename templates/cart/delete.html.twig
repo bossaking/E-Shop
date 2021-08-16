@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Remove product{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <form method="post" class="category-form">
+
+            <h1>Remove product</h1>
+
+            <hr>
+
+            <div class="mb-3">
+                <label for="inputName">Name</label>
+                <input type="text" value="{{ product.getName }}" name="name" id="inputName" class="form-control" autocomplete="name" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputDescription">Description</label>
+                <input type="text" value="{{ product.getDescription }}" name="description" id="inputDescription" class="form-control" autocomplete="description" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputPrice">Price</label>
+                <input type="number" value="{{ product.getPrice }}" name="price" id="inputPrice" step="any" class="form-control" autocomplete="price" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputCategory">Category</label>
+                <input type="text" value="{{ product.getCategory().getName() }}" name="category" id="inputCategory" class="form-control" autocomplete="category" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputQuantity">Quantity</label>
+                <input type="number" value="{{ quantity }}" name="quantity" id="inputQuantity" step="1" class="form-control" autocomplete="quantity" readonly>
+            </div>
+
+            <button type="submit" class="btn btn-success">Remove</button>
+            <a href="{{ path('app_cart') }}" class="btn btn-danger">Cancel</a>
+
+        </form>
+
+    </div>
+{% endblock %}

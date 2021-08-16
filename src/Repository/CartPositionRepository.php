@@ -22,19 +22,16 @@ class CartPositionRepository extends ServiceEntityRepository
     // /**
     //  * @return CartPosition[] Returns an array of CartPosition objects
     //  */
-    /*
-    public function findByExampleField($value)
+    public function findByUserId($value)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
+            ->andWhere('c.User = :val')
             ->setParameter('val', $value)
             ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?CartPosition

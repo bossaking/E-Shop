@@ -1,49 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} - Add product to cart{% endblock %}
+{% block title %}{{ parent() }} - My cart{% endblock %}
 
 {% block content %}
     <div class="content">
 
-        <form method="post" class="category-form">
+        <div class="table">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for cartPosition in cartPositions %}
+                    <tr>
+                        <td>{{ cartPosition.getProduct().getName() }}</td>
+                        <td>{{ cartPosition.getQuantity() }}</td>
+                        <td>{{ cartPosition.getProduct().getPrice() }} $</td>
+                        <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td>
+                        <td>
+                            <a href="{{ path('edit_cart_product', {'id': cartPosition.getId()}) }}" class="btn btn-primary">Edit</a> |
+                            <a href="{{ path('remove_product_from_cart', {'id': cartPosition.getId()}) }}" class="btn btn-danger">Remove</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                {% if cartPositions|length > 0 %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            {{ amount }} $
+                        </td>
+                        <td>
 
-            {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
+                            <a href="#" class="btn btn-warning">Order</a>
 
-            <h1>Add product to cart</h1>
-
-            <hr>
-
-            <div class="mb-3">
-                <label for="inputName">Name</label>
-                <input type="text" value="{{ product.getName }}" name="name" id="inputName" class="form-control" autocomplete="name" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label for="inputDescription">Description</label>
-                <input type="text" value="{{ product.getDescription }}" name="description" id="inputDescription" class="form-control" autocomplete="description" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label for="inputPrice">Price</label>
-                <input type="number" value="{{ product.getPrice }}" name="price" id="inputPrice" step="any" class="form-control" autocomplete="price" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label for="inputCategory">Category</label>
-                <input type="text" value="{{ product.getCategory().getName() }}" name="category" id="inputCategory" class="form-control" autocomplete="category" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label for="inputQuantity">Quantity</label>
-                <input type="number" value="{{ quantity }}" name="price" id="inputQuantity" step="1" class="form-control" autocomplete="quantity" required autofocus>
-            </div>
-
-            <button type="submit" class="btn btn-success">Add</button>
-            <a href="{{ path('app_products') }}" class="btn btn-danger">Cancel</a>
-
-        </form>
+                        </td>
+                    </tr>
+                {% endif %}
+                </tfoot>
+            </table>
+        </div>
 
     </div>
 {% endblock %}

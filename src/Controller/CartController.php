@@ -17,12 +17,25 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class CartController extends AbstractController
 {
     /**
-     * @Route("/cart", name="cart")
+     * @Route("/cart", name="app_cart")
+     * @IsGranted("ROLE_USER")
      */
     public function index(): Response
     {
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->findOneByEmail($this->getUser()->getUserIdentifier());
+
+        $repo = $this->getDoctrine()->getRepository(CartPosition::class);
+        $cartPositions = $repo->findByUserId($user->getId());
+
+        $amount = 0;
+        foreach($cartPositions as $cartPosition){
+            $amount += $cartPosition->getProduct()->getPrice() * $cartPosition->getQuantity();
+        }
+
         return $this->render('cart/index.html.twig', [
-            'controller_name' => 'CartController',
+            'cartPositions' => $cartPositions,
+            'amount' => $amount,
         ]);
     }
 
@@ -65,5 +78,62 @@ class CartController extends AbstractController
             'product' => $product,
             'quantity' => $quantity
         ]);
+    }
+
+    /**
+     * @Route("/edit-cart-product/{id}", name="edit_cart_product")
+     * @IsGranted("ROLE_USER")
+     */
+    public function editCartProduct(Request $request, CartPosition $cartPosition, NotyfFactory $flasher): Response
+    {
+        $error = null;
+        $quantity = $cartPosition->getQuantity();
+
+        if($request->getMethod() == Request::METHOD_POST){
+
+            $quantity = $request->request->get('quantity');
+
+            if ($quantity <= 0) {
+                $error = "The quantity must be greater than 0.";
+            } else {
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $cartPosition->setQuantity($quantity);
+                $entityManager->flush();
+
+                $flasher->addSuccess('Data has been saved successfully!');
+                return $this->redirectToRoute('app_cart');
+            }
+        }
+
+        return $this->render('cart/edit.html.twig', [
+            'error' => $error,
+            'product' => $cartPosition->getProduct(),
+            'quantity' => $quantity
+        ]);
+    }
+
+    /**
+     * @Route("/remove-product/{id}", name="remove_product_from_cart", requirements={"id": "\d+"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function removeProduct(Request $request, CartPosition $cartPosition, NotyfFactory $flasher): Response{
+
+        if($request->getMethod() == Request::METHOD_GET) {
+
+            return $this->render('cart/delete.html.twig', [
+                'product' => $cartPosition->getProduct(),
+                'quantity' => $cartPosition->getQuantity()
+            ]);
+
+        }else{
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($cartPosition);
+            $entityManager->flush();
+
+            $flasher->addSuccess('Data has been deleted successfully!');
+            return $this->redirectToRoute('app_cart');
+        }
     }
 }
