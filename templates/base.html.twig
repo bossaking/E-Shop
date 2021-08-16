@@ -35,6 +35,7 @@
                     <a href="{{ path('app_login') }}">Login</a>
                 {% else %}
                     <span>Welcome back, {{ app.user.getUsername }}</span>
+                    <a href="#">My cart</a>
                     <a href="{{ path('app_logout') }}">Logout</a>
                 {% endif %}
             </div>

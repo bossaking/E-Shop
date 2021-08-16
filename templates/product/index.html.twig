@@ -3,7 +3,68 @@
 {% block title %}{{ parent() }} - Products{% endblock %}
 
 {% block content %}
-    <h1>Products</h1>
+    <div class="content">
 
-    {% block page_contents %}{% endblock %}
+        <div class="table">
+            {% if app.user != null and 'ROLE_ADMIN' in app.user.roles %}
+                <a type="button" href="{{ path('create_product') }}" class="btn btn-success">Add new product</a>
+            {% endif %}
+
+            <form method="get" class="category-filter mt-3">
+
+                <div class="category-field">
+                    <label for="inputCategory">Category</label>
+                    <select class="form-select" aria-label="Default select example" name="category" id="selectCategory" autocomplete="category">
+                        <option value="0">All</option>
+                        {% for category in categories %}
+                            <option value="{{ category.getId() }}"
+                                    {% if category.getId() == categoryId %}
+                                        selected
+                                    {% endif %}
+                            >{{ category.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-warning filter-button mb-1">Find</button>
+            </form>
+
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Category</th>
+                    {% if app.user != null %}
+                        <th scope="col">Actions</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        <th scope="row">{{ product.getId() }}</th>
+                        <td>{{ product.getName() }}</td>
+                        <td>{{ product.getPrice() }} $</td>
+                        <td>{{ product.getDescription() }}</td>
+                        <td>{{ product.getCategory().getName() }}</td>
+                        {% if app.user != null %}
+                        <td>
+                            <a href="#" class="btn btn-info">Add to cart</a>
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                                | <a href="{{ path('edit_product', {'id': product.getId()}) }}" class="btn btn-primary">Edit</a> |
+                                <a href="{{ path('delete_product', {'id': product.getId()}) }}" class="btn btn-danger">Delete</a>
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 {% endblock %}

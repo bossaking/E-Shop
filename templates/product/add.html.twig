@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Add new product{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <form method="post" class="category-form">
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <h1>Add new product</h1>
+
+            <hr>
+
+            <div class="mb-3">
+                <label for="inputName">Name</label>
+                <input type="text" value="{{ name }}" name="name" id="inputName" class="form-control" autocomplete="name" required autofocus>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputDescription">Description</label>
+                <input type="text" value="{{ description }}" name="description" id="inputDescription" class="form-control" autocomplete="description" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputPrice">Price</label>
+                <input type="number" value="{{ price }}" name="price" id="inputPrice" step="any" class="form-control" autocomplete="price" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="inputCategory">Category</label>
+                <select class="form-select" aria-label="Default select example" name="category" id="selectCategory" autocomplete="category">
+                    {% for category in categories %}
+                        <option value="{{ category.getId() }}"
+                            {% if category.getId() == categoryId %}
+                                selected
+                            {% endif %}
+                        >{{ category.getName() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Add</button>
+            <a href="{{ path('app_products') }}" class="btn btn-danger">Cancel</a>
+
+        </form>
+
+    </div>
+{% endblock %}

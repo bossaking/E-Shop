@@ -11,3 +11,16 @@
 .category-form{
     margin: auto;
 }
+
+.category-filter{
+    display: flex;
+}
+
+.filter-button{
+    margin-top: auto;
+    margin-left: 2em;
+}
+
+.category-field{
+    width: 100%;
+}
