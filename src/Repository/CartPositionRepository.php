@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\CartPosition;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -32,6 +33,31 @@ class CartPositionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findBest($categoryId)
+    {
+        if($categoryId == 0) {
+            return $this->createQueryBuilder('c')
+                ->select('p.id, count(c.id) as counter')
+                ->join('c.Product', 'p')
+                ->andWhere('c.cartOrder IS NOT NULL')
+                ->groupBy('c.Product')
+                ->orderBy('counter', 'DESC')
+                ->getQuery()
+                ->getResult();
+        }else{
+            return $this->createQueryBuilder('c')
+                ->select('p.id, count(c.id) as counter')
+                ->join('c.Product', 'p')
+                ->andWhere('c.cartOrder IS NOT NULL')
+                ->andWhere('p.category = :val')
+                ->setParameter('val', $categoryId)
+                ->groupBy('c.Product')
+                ->orderBy('counter', 'DESC')
+                ->getQuery()
+                ->getResult();
+        }
     }
 
     /*

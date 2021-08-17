@@ -14,7 +14,8 @@
 
                 <div class="category-field">
                     <label for="inputCategory">Category</label>
-                    <select class="form-select" aria-label="Default select example" name="category" id="selectCategory" autocomplete="category">
+                    <select class="form-select" aria-label="Default select example" name="category" id="selectCategory"
+                            autocomplete="category">
                         <option value="0">All</option>
                         {% for category in categories %}
                             <option value="{{ category.getId() }}"
@@ -26,7 +27,28 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-warning filter-button mb-1">Find</button>
+                <button type="submit" class="btn btn-warning filter-button">Find</button>
+
+                <div class="category-field">
+                    <label for="selectFilter">Filter</label>
+                    <select class="form-select" aria-label="Default select example" name="filter" id="selectFilter"
+                            autocomplete="filter">
+                        <option value="0">All</option>
+                        <option value="1"
+                                {% if filter == 1 %}
+                                    selected
+                                {% endif %}
+                        >The most relevant
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-warning filter-button">Apply</button>
+            </form>
+
+            <form method="get" class="category-filter mt-3">
+
+
             </form>
 
 
@@ -50,13 +72,16 @@
                         <td>{{ product.getDescription() }}</td>
                         <td>{{ product.getCategory().getName() }}</td>
                         {% if app.user != null %}
-                        <td>
-                            <a href="{{ path('add_to_cart', {'id': product.getId()}) }}" class="btn btn-info">Add to cart</a>
-                            {% if 'ROLE_ADMIN' in app.user.roles %}
-                                | <a href="{{ path('edit_product', {'id': product.getId()}) }}" class="btn btn-primary">Edit</a> |
-                                <a href="{{ path('delete_product', {'id': product.getId()}) }}" class="btn btn-danger">Delete</a>
-                            {% endif %}
-                        </td>
+                            <td>
+                                <a href="{{ path('add_to_cart', {'id': product.getId()}) }}" class="btn btn-info">Add to
+                                    cart</a>
+                                {% if 'ROLE_ADMIN' in app.user.roles %}
+                                    | <a href="{{ path('edit_product', {'id': product.getId()}) }}"
+                                         class="btn btn-primary">Edit</a> |
+                                    <a href="{{ path('delete_product', {'id': product.getId()}) }}"
+                                       class="btn btn-danger">Delete</a>
+                                {% endif %}
+                            </td>
                         {% endif %}
                     </tr>
                 {% endfor %}

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CartPosition;
 use Flasher\Notyf\Prime\NotyfFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,41 +30,31 @@ class ProductController extends AbstractController
     public function getProducts(Request $request): Response
     {
         $id = $request->query->get('category');
-        if($id != null && $id != 0){
-            return $this->getFilteredProducts($id);
-        }else{
-            $repository = $this->getDoctrine()->getRepository(Product::class);
+        $filter = $request->query->get('filter');
 
-            $products = $repository->findAll();
 
-            $repo =  $this->getDoctrine()->getRepository(Category::class);
-            $categories = $repo->findAll();
-
-            return $this->render('product/index.html.twig', [
-                'products' => $products,
-                'categories' => $categories,
-                'categoryId' => 0
-            ]);
-        }
-    }
-
-    /**
-     * @Route("/products", name="get_filtered_products")
-     */
-    public function getFilteredProducts($id): Response
-    {
         $repository = $this->getDoctrine()->getRepository(Product::class);
+        $cartRepo = $this->getDoctrine()->getRepository(CartPosition::class);
+        $categoryRepo =  $this->getDoctrine()->getRepository(Category::class);
 
-        $repo =  $this->getDoctrine()->getRepository(Category::class);
-        $categories = $repo->findAll();
+        $categories = $categoryRepo->findAll();
 
-        $products = $repository->findByCategoryId($id);
-
+        if($filter != null && $filter != 0){
+            $positions = $cartRepo->findBest($id);
+            foreach ($positions as $position){
+                $products[] = $repository->find($position['id']);
+            }
+        }else if($id != null && $id != 0){
+            $products = $repository->findByCategoryId($id);
+        }else{
+            $products = $repository->findAll();
+        }
 
         return $this->render('product/index.html.twig', [
             'products' => $products,
             'categories' => $categories,
-            'categoryId' => $id
+            'categoryId' => $id,
+            'filter' => $filter
         ]);
     }
 
