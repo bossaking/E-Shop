@@ -31,7 +31,7 @@ class ProductController extends AbstractController
     {
         $id = $request->query->get('category');
         $filter = $request->query->get('filter');
-
+        $products = null;
 
         $repository = $this->getDoctrine()->getRepository(Product::class);
         $cartRepo = $this->getDoctrine()->getRepository(CartPosition::class);
