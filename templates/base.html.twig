@@ -24,7 +24,7 @@
             <div class="left-side-links">
                 <a href="{{ path('get_products') }}">Products</a>
                 {% if app.user != null %}
-                    <a href="#">Orders</a>
+                    <a href="{{ path('app_orders') }}">Orders</a>
                 {% endif %}
                 {% if app.user != null and 'ROLE_ADMIN' in app.user.roles %}
                     <a href="{{ path('app_categories') }}">Categories</a>
@@ -37,6 +37,7 @@
                 {% else %}
                     <span>Welcome back, {{ app.user.getUsername }}</span>
                     <a href="{{ path('app_cart') }}">My cart</a>
+                    <a href="{{ path('orders_history') }}">Orders history</a>
                     <a href="{{ path('app_logout') }}">Logout</a>
                 {% endif %}
             </div>

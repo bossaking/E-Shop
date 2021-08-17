@@ -27,6 +27,7 @@ class CartPositionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.User = :val')
             ->setParameter('val', $value)
+            ->andWhere('c.cartOrder IS NULL')
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult()

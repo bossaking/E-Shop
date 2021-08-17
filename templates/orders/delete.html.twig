@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Remove order{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <form method="post">
+            <div class="table">
+                <h3>Remove order</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cartPosition in order.getCartPositions() %}
+                        <tr>
+                            <td>{{ cartPosition.getProduct().getName() }}</td>
+                            <td>{{ cartPosition.getQuantity() }}</td>
+                            <td>{{ cartPosition.getProduct().getPrice() }} $</td>
+                            <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-success">Remove</button>
+                <a href="{{ path('app_orders') }}" class="btn btn-danger">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+{% endblock %}

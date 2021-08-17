@@ -29,3 +29,12 @@
 .table{
     font-family: 'Inconsolata', monospace;
 }
+
+.order-header{
+    display: flex;
+}
+
+.order-header a{
+    margin-left: auto;
+    margin-bottom: auto;
+}

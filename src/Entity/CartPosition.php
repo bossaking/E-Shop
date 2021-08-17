@@ -34,6 +34,11 @@ class CartPosition
      */
     private $Quantity;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="CartPositions")
+     */
+    private $cartOrder;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +76,18 @@ class CartPosition
     public function setQuantity(int $Quantity): self
     {
         $this->Quantity = $Quantity;
+
+        return $this;
+    }
+
+    public function getCartOrder(): ?Order
+    {
+        return $this->cartOrder;
+    }
+
+    public function setCartOrder(?Order $cartOrder): self
+    {
+        $this->cartOrder = $cartOrder;
 
         return $this;
     }

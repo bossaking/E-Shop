@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - My orders{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        {% if orders|length == 0 %}
+            <h3>You don't have any orders yet.</h3>
+        {% endif %}
+        {% for order in orders %}
+            <div class="table">
+                <div class="order-header">
+                    <h2>Order #{{ order.getId() }}</h2>
+                    <a href="{{ path('remove_order', {'id': order.getId()}) }}" class="btn btn-danger">Remove</a>
+                </div>
+                <hr>
+                <div class="status-info">
+                    {% set status = order.getStatus().getId() %}
+                    {% if status == 1 %}
+                        <span style="color: #ffc107">Status: {{ order.getStatus().getName() }}</span>
+                    {% elseif status == 2 %}
+                        <span style="color: #007bff">Status: {{ order.getStatus().getName() }}</span>
+                    {% elseif status == 3 %}
+                        <span style="color: #28a745;">Status: {{ order.getStatus().getName() }}</span>
+                    {% endif %}
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cartPosition in order.getCartPositions() %}
+                        <tr>
+                            <td>{{ cartPosition.getProduct().getName() }}</td>
+                            <td>{{ cartPosition.getQuantity() }}</td>
+                            <td>{{ cartPosition.getProduct().getPrice() }} $</td>
+                            <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    {# <tfoot> #}
+                    {#                {% if cartPositions|length > 0 %}#}
+                    {#                    <tr>#}
+                    {#                        <td></td>#}
+                    {#                        <td></td>#}
+                    {#                        <td></td>#}
+                    {#                        <td>#}
+                    {#                            {{ amount }} $#}
+                    {#                        </td>#}
+                    {#                        <td>#}
+
+                    {#                            <a href="{{ path('order_all') }}" class="btn btn-warning">Order All</a>#}
+
+                    {#                        </td>#}
+                    {#                    </tr>#}
+                    {#                {% endif %}#}
+                    {#                </tfoot>#}
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
