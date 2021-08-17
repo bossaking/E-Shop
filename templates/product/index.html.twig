@@ -10,45 +10,49 @@
                 <a type="button" href="{{ path('create_product') }}" class="btn btn-success">Add new product</a>
             {% endif %}
 
-            <form method="get" class="category-filter mt-3">
+            <form method="get" class="filters mt-3">
 
-                <div class="category-field">
+                <div class="filter-field">
+
                     <label for="inputCategory">Category</label>
-                    <select class="form-select" aria-label="Default select example" name="category" id="selectCategory"
-                            autocomplete="category">
-                        <option value="0">All</option>
-                        {% for category in categories %}
-                            <option value="{{ category.getId() }}"
-                                    {% if category.getId() == categoryId %}
+
+                    <div class="filter-work-field">
+                        <select class="form-select" aria-label="Default select example" name="category"
+                                id="selectCategory"
+                                autocomplete="category">
+                            <option value="0">All</option>
+                            {% for category in categories %}
+                                <option value="{{ category.getId() }}"
+                                        {% if category.getId() == categoryId %}
+                                            selected
+                                        {% endif %}
+                                >{{ category.getName() }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <button type="submit" class="btn btn-warning filter-button">Find</button>
+                    </div>
+
+                </div>
+
+
+                <div class="filter-field">
+                    <label for="selectFilter">Filter</label>
+
+                    <div class="filter-work-field">
+                        <select class="form-select" aria-label="Default select example" name="filter" id="selectFilter"
+                                autocomplete="filter">
+                            <option value="0">All</option>
+                            <option value="1"
+                                    {% if filter == 1 %}
                                         selected
                                     {% endif %}
-                            >{{ category.getName() }}</option>
-                        {% endfor %}
-                    </select>
+                            >The most relevant
+                            </option>
+                        </select>
+                        <button type="submit" class="btn btn-warning filter-button">Apply</button>
+                    </div>
                 </div>
-
-                <button type="submit" class="btn btn-warning filter-button">Find</button>
-
-                <div class="category-field">
-                    <label for="selectFilter">Filter</label>
-                    <select class="form-select" aria-label="Default select example" name="filter" id="selectFilter"
-                            autocomplete="filter">
-                        <option value="0">All</option>
-                        <option value="1"
-                                {% if filter == 1 %}
-                                    selected
-                                {% endif %}
-                        >The most relevant
-                        </option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-warning filter-button">Apply</button>
-            </form>
-
-            <form method="get" class="category-filter mt-3">
-
-
             </form>
 
 

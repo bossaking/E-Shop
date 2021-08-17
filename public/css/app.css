@@ -17,13 +17,22 @@
     display: flex;
 }
 
+.filters{
+    display: flex;
+}
+
 .filter-button{
     margin-top: auto;
     margin-left: 2em;
 }
 
-.category-field{
+.filter-field{
     width: 100%;
+}
+
+.filter-work-field{
+    display: flex;
+    flex-direction: row;
 }
 
 .table{
