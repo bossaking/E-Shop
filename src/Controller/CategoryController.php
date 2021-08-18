@@ -126,14 +126,10 @@ class CategoryController extends AbstractController
      */
     public function deleteCategory(Request $request, Category $category, NotyfFactory $flasher): Response{
 
-        $name = $category->getName();
-        $description = $category->getDescription();
-
         if($request->getMethod() == Request::METHOD_GET) {
 
             return $this->render('category/delete.html.twig', [
-                'name' => $name,
-                'description' => $description
+                'category' => $category
             ]);
 
         }else{
@@ -145,8 +141,7 @@ class CategoryController extends AbstractController
             }catch(ForeignKeyConstraintViolationException $ex) {
                 $flasher->addError("Cannot delete the category. Firstly you need to delete all products in this category.");
                 return $this->render('category/delete.html.twig', [
-                    'name' => $name,
-                    'description' => $description
+                    'category' => $category
                 ]);
             }
 

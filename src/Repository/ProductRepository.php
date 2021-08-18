@@ -24,13 +24,23 @@ class ProductRepository extends ServiceEntityRepository
       */
     public function findByCategoryId($value): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.category = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
+        if($value == null || $value == 0){
+            return $this->createQueryBuilder('p')
+                ->andWhere('NOT p.available = 0')
+                ->orderBy('p.id', 'ASC')
+                ->getQuery()
+                ->getResult()
+                ;
+        }else{
+            return $this->createQueryBuilder('p')
+                ->andWhere('p.category = :val')
+                ->setParameter('val', $value)
+                ->andWhere('NOT p.available = 0')
+                ->orderBy('p.id', 'ASC')
+                ->getQuery()
+                ->getResult()
+                ;
+        }
     }
 
     /*

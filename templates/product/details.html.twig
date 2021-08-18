@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Details{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <h2 class="section-header">Details</h2>
+        <hr>
+
+        <div class="details-card">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">{{ product.getName() }}</h3>
+                    <p class="card-text">{{ product.getCategory().getName() }}</p>
+                    <p class="card-text">{{ product.getPrice() }} $</p>
+                    <p class="card-text">{{ product.getDescription() }}</p>
+                    <a href="{{ path('add_to_cart', {'id': product.getId()}) }}"
+                       class="btn btn-info">Add to cart</a>
+                    {% if app.user != null and 'ROLE_ADMIN' in app.user.roles %}
+                        | <a href="{{ path('edit_product', {'id': product.getId()}) }}"
+                             class="btn btn-warning">Edit</a> |
+                        <a href="{{ path('delete_product', {'id': product.getId()}) }}"
+                           class="btn btn-danger">Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

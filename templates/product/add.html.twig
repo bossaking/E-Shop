@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} - Add new product{% endblock %}
+{% block title %}{{ parent() }} New product{% endblock %}
 
 {% block content %}
     <div class="content">
 
-        <form method="post" class="category-form">
+        <form method="post" class="product-form">
 
             {% if error %}
                 <div class="alert alert-danger">{{ error }}</div>
             {% endif %}
 
-            <h1>Add new product</h1>
+            <h2>New product</h2>
 
             <hr>
 
@@ -21,13 +21,13 @@
             </div>
 
             <div class="mb-3">
-                <label for="inputDescription">Description</label>
-                <input type="text" value="{{ description }}" name="description" id="inputDescription" class="form-control" autocomplete="description" required>
+                <label for="inputPrice">Price</label>
+                <input type="number" value="{{ price }}" name="price" id="inputPrice" step="any" class="form-control" autocomplete="price" required>
             </div>
 
             <div class="mb-3">
-                <label for="inputPrice">Price</label>
-                <input type="number" value="{{ price }}" name="price" id="inputPrice" step="any" class="form-control" autocomplete="price" required>
+                <label for="inputDescription">Description</label>
+                <textarea name="description" id="inputDescription" class="form-control description" rows="4" autocomplete="description" required>{{ description }}</textarea>
             </div>
 
             <div class="mb-3">

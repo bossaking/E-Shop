@@ -3,47 +3,40 @@
     padding: 0;
 }
 
-#content{
-    display: flex;
-    min-height: 80vh;
+.main-container{
+    padding: 1.1em;
 }
 
-.category-form{
-    margin: auto;
-    font-family: 'Oswald', sans-serif;
+.product-form{
+    width: 70%;
 }
 
-.category-filter{
-    display: flex;
+.product-form h2{
+    color: #F26419;
+    font-family: 'Francois One', sans-serif;
 }
 
-.filters{
-    display: flex;
+.product-form label{
+    font-family: 'Glegoo', serif;
 }
 
-.filter-button{
-    margin-top: auto;
-    margin-left: 2em;
+.product-form button{
+    font-family: 'Glegoo', serif;
 }
 
-.filter-field{
-    width: 100%;
+.product-form a{
+    font-family: 'Glegoo', serif;
 }
 
-.filter-work-field{
-    display: flex;
-    flex-direction: row;
+.product-form .card{
+    margin: 0 0 1em 0;
+    padding: 0;
+}
+
+.product-form .quantity{
+    width: 50%;
 }
 
 .table{
-    font-family: 'Inconsolata', monospace;
-}
-
-.order-header{
-    display: flex;
-}
-
-.order-header a{
-    margin-left: auto;
-    margin-bottom: auto;
+    font-family: 'Glegoo', serif;
 }

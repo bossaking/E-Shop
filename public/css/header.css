@@ -1,29 +1,132 @@
-.sidebar{
-    background-color: #428bca;
+.main-header {
     padding: 1em;
+    background-color: #55DDE0;
+    margin-bottom: 1em;
     display: flex;
+    flex-direction: row;
 }
 
-.sidebar a{
+.label-link {
+    display: flex;
+    flex-direction: row;
     text-decoration: none;
-    color: whitesmoke;
+}
+
+.main-header img {
+    width: 3em;
+    height: 3em;
+    margin-right: 1em;
+}
+
+.main-header h2 {
+    text-transform: uppercase;
+    font-family: 'Francois One', sans-serif;
+    font-size: 2.5em;
+    color: #F26419;
+}
+
+.right-side-links a {
+    text-decoration: none;
+    color: #F26419;
     font-size: 1.2em;
-    margin: 0 1em 0 1em;
-    font-family: 'Oswald', sans-serif;
 }
 
-.sidebar a:hover{
-    color: #B0413E;
+.right-side-links a:hover {
+    color: #F6AE2D;
 }
 
-.sidebar span{
-    color: #eada2b;
+.right-side-links {
+    margin: auto 2em auto auto;
+    text-transform: uppercase;
+    color: #F26419;
+    font-family: 'Francois One', sans-serif;
     font-size: 1.2em;
-    font-family: 'Oswald', sans-serif;
-    margin: 0 1em 0 1em;
 }
 
-.right-side-links{
+.right-side-links span {
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: #33658A;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.8em;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover span {
+    color: #2F4858;
+}
+
+.sidebar {
+    font-family: 'Amaranth', sans-serif;
+}
+
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-links a {
+    text-decoration: none;
+    font-size: 2em;
+    color: #33658A;
+}
+
+.sidebar-links a:hover {
+    color: #F6AE2D;
+}
+
+.link-with-button {
+    display: flex;
+    flex-direction: row;
+}
+
+.link-with-button img {
+    width: 1em;
+    height: 1em;
+}
+
+.image-link {
     margin-left: auto;
 }
 
+.image-link:hover {
+    transform: scale(1.5);
+}
+
+.vl {
+    border-left: 2px solid #F26419;;
+    height: 100%;
+    margin: auto;
+}
+
+.vl-container{
+    display: flex;
+}

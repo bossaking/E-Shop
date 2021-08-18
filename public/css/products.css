@@ -1,0 +1,56 @@
+.cards-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.card{
+    margin-top: 1em;
+}
+
+.card-title{
+    font-family: 'Lalezar', cursive;
+}
+
+.card-body{
+    font-family: 'Amaranth', sans-serif;
+}
+
+.card-body a{
+    font-family: 'Glegoo', serif;
+    font-size: 0.8em;
+}
+
+.section-header{
+    color: #F26419;
+    font-family: 'Francois One', sans-serif;
+}
+
+.filter-field > label{
+    font-family: 'Francois One', sans-serif;
+    margin-bottom: 0.1em;
+    font-size: 2em;
+    color: #F26419;
+}
+
+.filter-work-field{
+    display: flex;
+    flex-direction: row;
+    font-family: 'Glegoo', serif;
+    font-size: 0.8em;
+}
+
+.form-select{
+    margin-right: 2em;
+}
+
+.filters{
+    margin-bottom: 1em;
+}
+
+.details-card{
+    width: 50%;
+}
+
+.description{
+    resize: none;
+}

@@ -30,8 +30,7 @@ class ProductController extends AbstractController
     public function getProducts(Request $request): Response
     {
         $id = $request->query->get('category');
-        $filter = $request->query->get('filter');
-        $products = null;
+        $bestProducts = null;
 
         $repository = $this->getDoctrine()->getRepository(Product::class);
         $cartRepo = $this->getDoctrine()->getRepository(CartPosition::class);
@@ -39,22 +38,20 @@ class ProductController extends AbstractController
 
         $categories = $categoryRepo->findAll();
 
-        if($filter != null && $filter != 0){
-            $positions = $cartRepo->findBest($id);
-            foreach ($positions as $position){
-                $products[] = $repository->find($position['id']);
-            }
-        }else if($id != null && $id != 0){
-            $products = $repository->findByCategoryId($id);
-        }else{
-            $products = $repository->findAll();
+
+        $positions = $cartRepo->findBest($id);
+        foreach ($positions as $position) {
+            $bestProducts[] = $repository->find($position['id']);
         }
+
+        $products = $repository->findByCategoryId($id);
+
 
         return $this->render('product/index.html.twig', [
             'products' => $products,
+            'bestProducts' => $bestProducts,
             'categories' => $categories,
-            'categoryId' => $id,
-            'filter' => $filter
+            'categoryId' => $id
         ]);
     }
 
@@ -87,7 +84,7 @@ class ProductController extends AbstractController
 
                 $cat = $repo->find($category);
                 $product = new Product($name, $price, $description, $cat);
-
+                $product->setAvailable(true);
 
                 $entityManager->persist($product);
                 $entityManager->flush();
@@ -175,27 +172,30 @@ class ProductController extends AbstractController
 
         if($request->getMethod() == Request::METHOD_GET) {
 
-            $name = $product->getName();
-            $description = $product->getDescription();
-            $price = $product->getPrice();
-            $category = $product->getCategory()->getName();
-
             return $this->render('product/delete.html.twig', [
-                'name' => $name,
-                'description' => $description,
-                'price' => $price,
-                'category' => $category
+                'product' => $product
             ]);
 
         }else{
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($product);
+            $product->setAvailable(false);
             $entityManager->flush();
 
-            $flasher->addSuccess('Data has been deleted successfully!');
+            $flasher->addSuccess('Product has been deleted successfully!');
             return $this->redirectToRoute('app_products');
         }
+    }
+
+    /**
+     * @Route("/product-details/{id}", name="product_details", requirements={"id": "\d+"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function productDetails(Product $product): Response
+    {
+        return $this->render('product/details.html.twig', [
+            'product' => $product
+        ]);
     }
 
 }

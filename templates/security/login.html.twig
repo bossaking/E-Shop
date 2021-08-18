@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} | Log in{% endblock %}
+{% block title %}{{ parent() }} Log in{% endblock %}
 
 {% block content %}
 
-    <form method="post" class="login-form">
+    <form method="post" class="product-form">
 
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        <h1>Sign in</h1>
+        <h2>Sign in</h2>
 
         <hr>
 

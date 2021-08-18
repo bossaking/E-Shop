@@ -1,97 +1,101 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} - Products{% endblock %}
+{% block title %}{{ parent() }} Products{% endblock %}
 
 {% block content %}
-    <div class="content">
+    <div class="cards-content">
 
-        <div class="table">
-            {% if app.user != null and 'ROLE_ADMIN' in app.user.roles %}
-                <a type="button" href="{{ path('create_product') }}" class="btn btn-success">Add new product</a>
-            {% endif %}
+        <form method="get" class="filters">
 
-            <form method="get" class="filters mt-3">
+            <div class="filter-field">
 
-                <div class="filter-field">
+                <label for="inputCategory">Category</label>
 
-                    <label for="inputCategory">Category</label>
-
-                    <div class="filter-work-field">
-                        <select class="form-select" aria-label="Default select example" name="category"
-                                id="selectCategory"
-                                autocomplete="category">
-                            <option value="0">All</option>
-                            {% for category in categories %}
-                                <option value="{{ category.getId() }}"
-                                        {% if category.getId() == categoryId %}
-                                            selected
-                                        {% endif %}
-                                >{{ category.getName() }}</option>
-                            {% endfor %}
-                        </select>
-
-                        <button type="submit" class="btn btn-warning filter-button">Find</button>
-                    </div>
-
-                </div>
-
-
-                <div class="filter-field">
-                    <label for="selectFilter">Filter</label>
-
-                    <div class="filter-work-field">
-                        <select class="form-select" aria-label="Default select example" name="filter" id="selectFilter"
-                                autocomplete="filter">
-                            <option value="0">All</option>
-                            <option value="1"
-                                    {% if filter == 1 %}
+                <div class="filter-work-field">
+                    <select class="form-select" aria-label="Default select example" name="category"
+                            id="selectCategory"
+                            autocomplete="category">
+                        <option value="0">All</option>
+                        {% for category in categories %}
+                            <option value="{{ category.getId() }}"
+                                    {% if category.getId() == categoryId %}
                                         selected
                                     {% endif %}
-                            >The most relevant
-                            </option>
-                        </select>
-                        <button type="submit" class="btn btn-warning filter-button">Apply</button>
+                            >{{ category.getName() }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn btn-warning filter-button">Find</button>
+                </div>
+
+            </div>
+
+        </form>
+
+        {% if bestProducts|length > 0 %}
+            <h3 class="section-header">Most relevant products</h3>
+            <hr>
+        {% endif %}
+        {% for key, product in bestProducts %}
+
+            {% if key % 4 == 0 %}
+                <div class="row">
+            {% endif %}
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ product.getName() }}</h3>
+                        <p class="card-text">{{ product.getCategory().getName() }}</p>
+                        <p class="card-text">{{ product.getPrice() }} $</p>
+                        {% if app.user != null %}
+                        <a href="{{ path('product_details', {'id': product.getId()}) }}" class="btn btn-primary">Details</a>
+                        {% endif %}
+                        {% if app.user != null and 'ROLE_ADMIN' in app.user.roles %}
+                            | <a href="{{ path('edit_product', {'id': product.getId()}) }}"
+                                 class="btn btn-warning">Edit</a> |
+                            <a href="{{ path('delete_product', {'id': product.getId()}) }}"
+                               class="btn btn-danger">Delete</a>
+                        {% endif %}
                     </div>
                 </div>
-            </form>
+            </div>
+            {% if (key + 1) % 4 == 0 %}
+                </div>
+            {% endif %}
 
+        {% endfor %}
+            </div>
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Category</th>
-                    {% if app.user != null %}
-                        <th scope="col">Actions</th>
-                    {% endif %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for product in products %}
-                    <tr>
-                        <td>{{ product.getName() }}</td>
-                        <td>{{ product.getPrice() }} $</td>
-                        <td>{{ product.getDescription() }}</td>
-                        <td>{{ product.getCategory().getName() }}</td>
+        <h3 class="section-header mt-3">All products</h3>
+        <hr>
+        {% for key, product in products %}
+
+            {% if key % 4 == 0 %}
+                <div class="row">
+            {% endif %}
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ product.getName() }}</h3>
+                        <p class="card-text">{{ product.getCategory().getName() }}</p>
+                        <p class="card-text">{{ product.getPrice() }} $</p>
                         {% if app.user != null %}
-                            <td>
-                                <a href="{{ path('add_to_cart', {'id': product.getId()}) }}" class="btn btn-info">Add to
-                                    cart</a>
-                                {% if 'ROLE_ADMIN' in app.user.roles %}
-                                    | <a href="{{ path('edit_product', {'id': product.getId()}) }}"
-                                         class="btn btn-primary">Edit</a> |
-                                    <a href="{{ path('delete_product', {'id': product.getId()}) }}"
-                                       class="btn btn-danger">Delete</a>
-                                {% endif %}
-                            </td>
+                            <a href="{{ path('product_details', {'id': product.getId()}) }}" class="btn btn-primary">Details</a>
                         {% endif %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                        {% if app.user != null and 'ROLE_ADMIN' in app.user.roles %}
+                            | <a href="{{ path('edit_product', {'id': product.getId()}) }}"
+                                 class="btn btn-warning">Edit</a> |
+                            <a href="{{ path('delete_product', {'id': product.getId()}) }}"
+                               class="btn btn-danger">Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if (key + 1) % 4 == 0 %}
+                </div>
+            {% endif %}
 
+        {% endfor %}
+            </div>
     </div>
 {% endblock %}
