@@ -76,7 +76,7 @@
                         <td>{{ product.getDescription() }}</td>
                         <td>{{ product.getCategory().getName() }}</td>
                         {% if app.user != null %}
-                            <td>
+                            <td style="min-width: 20em">
                                 <a href="{{ path('add_to_cart', {'id': product.getId()}) }}" class="btn btn-info">Add to
                                     cart</a>
                                 {% if 'ROLE_ADMIN' in app.user.roles %}

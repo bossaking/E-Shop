@@ -9,7 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
  * @method Product|null findOneBy(array $criteria, array $orderBy = null)
- * @method Product[]    findAll()
  * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ProductRepository extends ServiceEntityRepository
@@ -26,11 +25,25 @@ class ProductRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.category = :val')
+            ->andWhere('p.available != 0')
             ->setParameter('val', $value)
             ->orderBy('p.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    /**
+     * @return Product[] Returns an array of Product objects
+     */
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.available != 0')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
     /*

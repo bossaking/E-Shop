@@ -45,6 +45,11 @@ class Product
      */
     private $cartPositions;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $available;
+
 
     public function __construct($name, $price, $description, $category)
     {
@@ -134,6 +139,18 @@ class Product
                 $cartPosition->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvailable(): ?bool
+    {
+        return $this->available;
+    }
+
+    public function setAvailable(?bool $available): self
+    {
+        $this->available = $available;
 
         return $this;
     }

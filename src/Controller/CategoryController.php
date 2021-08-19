@@ -50,7 +50,7 @@ class CategoryController extends AbstractController
         $description = "";
         $error = null;
 
-        if($request->getMethod() == Request::METHOD_POST){
+        if ($request->getMethod() == Request::METHOD_POST) {
             $name = $request->request->get("name");
             $description = $request->request->get("description");
 
@@ -62,6 +62,7 @@ class CategoryController extends AbstractController
                 $category = new Category();
                 $category->setName($name);
                 $category->setDescription($description);
+                $category->setAvailable(true);
 
                 $entityManager->persist($category);
                 $entityManager->flush();
@@ -90,10 +91,10 @@ class CategoryController extends AbstractController
         $name = "";
         $description = "";
 
-        if($request->getMethod() == Request::METHOD_GET){
+        if ($request->getMethod() == Request::METHOD_GET) {
             $name = $category->getName();
             $description = $category->getDescription();
-        }else if($request->getMethod() == Request::METHOD_POST){
+        } else if ($request->getMethod() == Request::METHOD_POST) {
 
             $name = $request->request->get("name");
             $description = $request->request->get("description");
@@ -124,32 +125,36 @@ class CategoryController extends AbstractController
      * @Route("/delete-category/{id}", name="delete_category", requirements={"id": "\d+"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteCategory(Request $request, Category $category, NotyfFactory $flasher): Response{
+    public function deleteCategory(Request $request, Category $category, NotyfFactory $flasher): Response
+    {
 
         $name = $category->getName();
         $description = $category->getDescription();
 
-        if($request->getMethod() == Request::METHOD_GET) {
+        if ($request->getMethod() == Request::METHOD_GET) {
 
             return $this->render('category/delete.html.twig', [
                 'name' => $name,
                 'description' => $description
             ]);
 
-        }else{
+        } else {
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($category);
-            try{
-                $entityManager->flush();
-            }catch(ForeignKeyConstraintViolationException $ex) {
-                $flasher->addError("Cannot delete the category. Firstly you need to delete all products in this category.");
-                return $this->render('category/delete.html.twig', [
-                    'name' => $name,
-                    'description' => $description
-                ]);
+
+            foreach ($category->getProducts() as $product) {
+                if ($product->getAvailable()) {
+                    $flasher->addError("Cannot delete the category. Firstly you need to delete all products in this category.");
+                    return $this->render('category/delete.html.twig', [
+                        'name' => $name,
+                        'description' => $description
+                    ]);
+                }
             }
 
+            $category->setAvailable(false);
+
+            $entityManager->flush();
 
             $flasher->addSuccess('Data has been deleted successfully!');
             return $this->redirectToRoute('app_categories');

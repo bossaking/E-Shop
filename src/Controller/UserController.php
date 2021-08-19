@@ -27,7 +27,7 @@ class UserController extends AbstractController
     public function createUser(UserPasswordEncoderInterface $encoder): Response
     {
         $user = new User();
-        $plainPassword = 'user1';
+        $plainPassword = 'user3';
         $encoded = $encoder->encodePassword($user, $plainPassword);
 
         return new Response($encoded);

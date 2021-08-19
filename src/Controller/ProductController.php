@@ -87,7 +87,7 @@ class ProductController extends AbstractController
 
                 $cat = $repo->find($category);
                 $product = new Product($name, $price, $description, $cat);
-
+                $product->setAvailable(true);
 
                 $entityManager->persist($product);
                 $entityManager->flush();
@@ -190,7 +190,7 @@ class ProductController extends AbstractController
         }else{
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($product);
+            $product->setAvailable(false);
             $entityManager->flush();
 
             $flasher->addSuccess('Data has been deleted successfully!');
