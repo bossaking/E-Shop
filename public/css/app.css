@@ -37,6 +37,23 @@
     width: 50%;
 }
 
+.product-form .status{
+    width: 50%;
+    font-family: 'Glegoo', serif;
+}
+
 .table{
     font-family: 'Glegoo', serif;
+}
+
+.card-body{
+    background-color: #55DDE0;
+}
+
+.card{
+    height: 100%;
+}
+
+.row{
+    margin-bottom: 1em;
 }

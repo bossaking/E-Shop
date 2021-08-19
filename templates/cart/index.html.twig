@@ -1,54 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} - My cart{% endblock %}
+{% block title %}{{ parent() }} My cart{% endblock %}
 
 {% block content %}
-    <div class="content">
 
-        <div class="table">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Product</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for cartPosition in cartPositions %}
-                    <tr>
-                        <td>{{ cartPosition.getProduct().getName() }}</td>
-                        <td>{{ cartPosition.getQuantity() }}</td>
-                        <td>{{ cartPosition.getProduct().getPrice() }} $</td>
-                        <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td>
-                        <td>
-                            <a href="{{ path('edit_cart_product', {'id': cartPosition.getId()}) }}" class="btn btn-primary">Edit</a> |
-                            <a href="{{ path('remove_product_from_cart', {'id': cartPosition.getId()}) }}" class="btn btn-danger">Remove</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-                <tfoot>
+    <div class="cards-content">
+
+        <div class="cart-header">
+            <h3 class="section-header mt-3">My cart</h3>
+            <div class="right-side">
+                <h5>Cart amount: {{ amount }} $</h5>
                 {% if cartPositions|length > 0 %}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            {{ amount }} $
-                        </td>
-                        <td>
-
-                            <a href="{{ path('order_all') }}" class="btn btn-warning">Order All</a>
-
-                        </td>
-                    </tr>
+                    <a href="{{ path('order_all') }}" class="btn btn-warning">Order All</a>
                 {% endif %}
-                </tfoot>
-            </table>
+            </div>
         </div>
 
+        <hr>
+        {% for key, cartPosition in cartPositions %}
+
+            {% if key % 4 == 0 %}
+                <div class="row">
+            {% endif %}
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ cartPosition.getProduct().getName() }}</h3>
+                        <p class="card-text">Price: {{ cartPosition.getProduct().getPrice() }} $</p>
+                        <p class="card-text">Quantity: {{ cartPosition.getQuantity() }}</p>
+                        <p class="card-text">Amount: {{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</p>
+                        <a href="{{ path('edit_cart_product', {'id': cartPosition.getId()}) }}" class="btn btn-primary">Edit</a>
+                        |
+                        <a href="{{ path('remove_product_from_cart', {'id': cartPosition.getId()}) }}"
+                           class="btn btn-danger">Remove</a>
+                    </div>
+                </div>
+            </div>
+            {% if (key + 1) % 4 == 0 %}
+                </div>
+            {% endif %}
+
+        {% endfor %}
     </div>
+
+    </div>
+
+{#    <div class="content">#}
+
+{#        <div class="table">#}
+{#            <table class="table">#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th scope="col">Product</th>#}
+{#                    <th scope="col">Quantity</th>#}
+{#                    <th scope="col">Price</th>#}
+{#                    <th scope="col">Amount</th>#}
+{#                    <th scope="col">Actions</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                {% for cartPosition in cartPositions %}#}
+{#                    <tr>#}
+{#                        <td>{{ cartPosition.getProduct().getName() }}</td>#}
+{#                        <td>{{ cartPosition.getQuantity() }}</td>#}
+{#                        <td>{{ cartPosition.getProduct().getPrice() }} $</td>#}
+{#                        <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td>#}
+{#                        <td>#}
+{#                            <a href="{{ path('edit_cart_product', {'id': cartPosition.getId()}) }}" class="btn btn-primary">Edit</a> |#}
+{#                            <a href="{{ path('remove_product_from_cart', {'id': cartPosition.getId()}) }}" class="btn btn-danger">Remove</a>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#                <tfoot>#}
+{#                {% if cartPositions|length > 0 %}#}
+{#                    <tr>#}
+{#                        <td></td>#}
+{#                        <td></td>#}
+{#                        <td></td>#}
+{#                        <td>#}
+{#                            {{ amount }} $#}
+{#                        </td>#}
+{#                        <td>#}
+
+
+
+{#                        </td>#}
+{#                    </tr>#}
+{#                {% endif %}#}
+{#                </tfoot>#}
+{#            </table>#}
+{#        </div>#}
+
+{#    </div>#}
 {% endblock %}

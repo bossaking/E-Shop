@@ -1,65 +1,104 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} - My orders{% endblock %}
+{% block title %}{{ parent() }} Orders history{% endblock %}
 
 {% block content %}
     <div class="content">
 
+        <h3 class="section-header">Orders history</h3>
+        <hr>
+
         {% if orders|length == 0 %}
             <h3>You have no order history.</h3>
         {% endif %}
-        {% for order in orders %}
-            <div class="table">
-                <div class="order-header">
-                    <h2>Order #{{ order.getId() }}</h2>
-                </div>
-                <hr>
-                <div class="status-info">
-                    {% set status = order.getStatus().getId() %}
-                    {% if status == 3 %}
-                        <span style="color: #28a745;">Status: {{ order.getStatus().getName() }}</span>
-                    {% elseif status == 4 %}
-                        <span style="color: #dc3545">Status: {{ order.getStatus().getName() }}</span>
-                    {% endif %}
-                </div>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for cartPosition in order.getCartPositions() %}
-                        <tr>
-                            <td>{{ cartPosition.getProduct().getName() }}</td>
-                            <td>{{ cartPosition.getQuantity() }}</td>
-                            <td>{{ cartPosition.getProduct().getPrice() }} $</td>
-                            <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    {# <tfoot> #}
-                    {#                {% if cartPositions|length > 0 %}#}
-                    {#                    <tr>#}
-                    {#                        <td></td>#}
-                    {#                        <td></td>#}
-                    {#                        <td></td>#}
-                    {#                        <td>#}
-                    {#                            {{ amount }} $#}
-                    {#                        </td>#}
-                    {#                        <td>#}
+        {% for key, order in orders %}
 
-                    {#                            <a href="{{ path('order_all') }}" class="btn btn-warning">Order All</a>#}
-
-                    {#                        </td>#}
-                    {#                    </tr>#}
-                    {#                {% endif %}#}
-                    {#                </tfoot>#}
-                </table>
+            {% if key % 4 == 0 %}
+                <div class="row">
+            {% endif %}
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Order # {{ order.getId() }}</h3>
+                        {% set status = order.getStatus().getId() %}
+                        {% if status == 3 %}
+                            <p class="card-text" style="color: #28a745;">Status: {{ order.getStatus().getName() }}</p>
+                        {% elseif status == 4 %}
+                            <p class="card-text" style="color: #dc3545;">Status: {{ order.getStatus().getName() }}</p>
+                        {% endif %}
+                        <p class="card-text" style="color: #F26419;">
+                            Products:
+                        <hr>
+                        {% set amount = 0 %}
+                        {% for position in order.getCartPositions() %}
+                            {% set amount = amount + position.getProduct().getPrice() * position.getQuantity() %}
+                            <span>{{ position.getQuantity() }} x {{ position.getProduct().getName() }} ({{ position.getProduct().getPrice() }}$) = {{ position.getProduct().getPrice() * position.getQuantity() }}$</span>
+                            <hr>
+                        {% endfor %}
+                        </p>
+                        <p class="card-text" style="color: #F26419;">Order amount: {{ amount }}$</p>
+                    </div>
+                </div>
             </div>
+            {% if (key + 1) % 4 == 0 %}
+                </div>
+            {% endif %}
+
         {% endfor %}
+    </div>
+
+    {# {% for order in orders %} #}
+    {# <div class="table"> #}
+    {# <div class="order-header"> #}
+    {# <h2>Order #{{ order.getId() }}</h2> #}
+    {# </div> #}
+    {# <hr> #}
+    {# <div class="status-info"> #}
+    {# {% set status = order.getStatus().getId() %} #}
+    {# {% if status == 3 %} #}
+    {# <span style="color: #28a745;">Status: {{ order.getStatus().getName() }}</span> #}
+    {# {% elseif status == 4 %} #}
+    {# <span style="color: #dc3545">Status: {{ order.getStatus().getName() }}</span> #}
+    {# {% endif %} #}
+    {# </div> #}
+    {# <table class="table"> #}
+    {# <thead> #}
+    {# <tr> #}
+    {# <th scope="col">Product</th> #}
+    {# <th scope="col">Quantity</th> #}
+    {# <th scope="col">Price</th> #}
+    {# <th scope="col">Amount</th> #}
+    {# </tr> #}
+    {# </thead> #}
+    {# <tbody> #}
+    {# {% for cartPosition in order.getCartPositions() %} #}
+    {# <tr> #}
+    {# <td>{{ cartPosition.getProduct().getName() }}</td> #}
+    {# <td>{{ cartPosition.getQuantity() }}</td> #}
+    {# <td>{{ cartPosition.getProduct().getPrice() }} $</td> #}
+    {# <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td> #}
+    {# </tr> #}
+    {# {% endfor %} #}
+    {# </tbody> #}
+    {# #}{# <tfoot> #}
+    {# #}{# {% if cartPositions|length > 0 %} #}
+    {# #}{# <tr> #}
+    {# #}{# <td></td> #}
+    {# #}{# <td></td> #}
+    {# #}{# <td></td> #}
+    {# #}{# <td> #}
+    {# #}{# {{ amount }} $ #}
+    {# #}{# </td> #}
+    {# #}{# <td> #}
+
+    {# #}{# <a href="{{ path('order_all') }}" class="btn btn-warning">Order All</a> #}
+
+    {# #}{# </td> #}
+    {# #}{# </tr> #}
+    {# #}{# {% endif %} #}
+    {# #}{# </tfoot> #}
+    {# </table> #}
+    {# </div> #}
+    {# {% endfor %} #}
     </div>
 {% endblock %}

@@ -1,0 +1,29 @@
+.cart-header{
+    display: flex;
+    flex-direction: row;
+}
+
+.right-side{
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.right-side h5{
+    color: #F26419;
+    font-family: 'Francois One', sans-serif;
+    margin-right: 1em;
+    margin-top: 1em;
+    text-align: center;
+}
+
+.right-side a{
+    font-family: 'Glegoo', serif;
+    margin-top: 1em;
+}
+
+.cart{
+    height: 100%;
+}

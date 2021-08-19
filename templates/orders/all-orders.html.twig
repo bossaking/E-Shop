@@ -1,94 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} - All orders{% endblock %}
+{% block title %}{{ parent() }} Orders{% endblock %}
 
 {% block content %}
     <div class="content">
 
-        <form method="get" class="category-filter mt-3 mb-3">
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+        <form method="get" class="filters">
 
-            <div class="category-field">
-                <label for="selectStatus" class="mb-1">Status</label>
-                <select class="form-select" aria-label="Default select example" name="status" id="selectStatus"
-                        autocomplete="status">
-                    <option value="0">All</option>
-                    {% for status in statuses %}
-                        <option value="{{ status.getId() }}"
-                                {% if status.getId() == statusId %}
-                                    selected
-                                {% endif %}
-                        >{{ status.getName() }}</option>
-                    {% endfor %}
-                </select>
+            <div class="filter-field">
+
+                <label for="selectStatus">Status</label>
+
+                <div class="filter-work-field">
+                    <select class="form-select" aria-label="Default select example" name="status" id="selectStatus"
+                            autocomplete="status">
+                        <option value="0">All</option>
+                        {% for status in statuses %}
+                            <option value="{{ status.getId() }}"
+                                    {% if status.getId() == statusId %}
+                                        selected
+                                    {% endif %}
+                            >{{ status.getName() }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn btn-warning filter-button">Find</button>
+                </div>
+
             </div>
 
-            <button type="submit" class="btn btn-warning filter-button">Find</button>
         </form>
+            <hr>
+        {% endif %}
 
+        <h3 class="section-header">Orders</h3>
         <hr>
 
         {% if orders|length == 0 %}
             <h3>There are no orders yet.</h3>
         {% endif %}
 
-        {% for order in orders %}
-            <div class="table">
-                <div class="order-header">
-                    <h2>Order #{{ order.getId() }} - User: {{ order.getUser().getEmail() }}</h2>
-                    <a href="{{ path('edit_order', { 'id': order.getId() }) }}" class="btn btn-primary">Edit</a>
-                </div>
-                <hr>
-                <div class="status-info">
-                    {% set status = order.getStatus().getId() %}
-                    {% if status == 1 %}
-                        <span style="color: #ffc107">Status: {{ order.getStatus().getName() }}</span>
-                    {% elseif status == 2 %}
-                        <span style="color: #007bff">Status: {{ order.getStatus().getName() }}</span>
-                    {% elseif status == 3 %}
-                        <span style="color: #28a745;">Status: {{ order.getStatus().getName() }}</span>
-                    {% elseif status == 4 %}
-                        <span style="color: #dc3545;">Status: {{ order.getStatus().getName() }}</span>
-                    {% endif %}
-                </div>
-                <table class="table table-bordered border-primary">
-                    <thead>
-                    <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for cartPosition in order.getCartPositions() %}
-                        <tr>
-                            <td>{{ cartPosition.getProduct().getName() }}</td>
-                            <td>{{ cartPosition.getQuantity() }}</td>
-                            <td>{{ cartPosition.getProduct().getPrice() }} $</td>
-                            <td>{{ cartPosition.getProduct().getPrice() * cartPosition.getQuantity() }} $</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    {# <tfoot> #}
-                    {# {% if cartPositions|length > 0 %} #}
-                    {# <tr> #}
-                    {# <td></td> #}
-                    {# <td></td> #}
-                    {# <td></td> #}
-                    {# <td> #}
-                    {# {{ amount }} $ #}
-                    {# </td> #}
-                    {# <td> #}
+        {% for key, order in orders %}
 
-                    {# <a href="{{ path('order_all') }}" class="btn btn-warning">Order All</a> #}
-
-                    {# </td> #}
-                    {# </tr> #}
-                    {# {% endif %} #}
-                    {# </tfoot> #}
-                </table>
+            {% if key % 4 == 0 %}
+                <div class="row">
+            {% endif %}
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            <h5 class="card-title">User:<br> {{ order.getUser().getEmail() }}</h5>
+                            <p class="card-text">Order id: {{ order.getId() }}</p>
+                        {% else %}
+                            <h3 class="card-title">Order # {{ order.getId() }}</h3>
+                        {% endif %}
+                        {% set status = order.getStatus().getId() %}
+                        {% if status == 1 %}
+                            <p class="card-text" style="color: #a27b00">Status: {{ order.getStatus().getName() }}</p>
+                        {% elseif status == 2 %}
+                            <p class="card-text" style="color: #007bff">Status: {{ order.getStatus().getName() }}</p>
+                        {% elseif status == 3 %}
+                            <p class="card-text" style="color: #28a745;">Status: {{ order.getStatus().getName() }}</p>
+                        {% elseif status == 4 %}
+                            <p class="card-text" style="color: #dc3545;">Status: {{ order.getStatus().getName() }}</p>
+                        {% endif %}
+                            <a href="{{ path('order_details', { 'id': order.getId() }) }}"
+                               class="btn btn-primary">Details</a>
+                    </div>
+                </div>
             </div>
+            {% if (key + 1) % 4 == 0 %}
+                </div>
+            {% endif %}
+
         {% endfor %}
+    </div>
     </div>
 
 {% endblock %}

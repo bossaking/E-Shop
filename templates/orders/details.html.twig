@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Order details{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <form method="post" class="product-form">
+
+            <h2>Order details</h2>
+
+            <hr>
+
+            <div class="details-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Order # {{ order.getId() }}</h3>
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            <p class="card-text">User: {{ order.getUser().getEmail() }}</p>
+                        {% endif %}
+                        {% set status = order.getStatus().getId() %}
+                        {% if status == 1 %}
+                            <p class="card-text" style="color: #a27b00">Status: {{ order.getStatus().getName() }}</p>
+                        {% elseif status == 2 %}
+                            <p class="card-text" style="color: #007bff">Status: {{ order.getStatus().getName() }}</p>
+                        {% elseif status == 3 %}
+                            <p class="card-text" style="color: #28a745;">Status: {{ order.getStatus().getName() }}</p>
+                        {% elseif status == 4 %}
+                            <p class="card-text" style="color: #dc3545;">Status: {{ order.getStatus().getName() }}</p>
+                        {% endif %}
+                        <p class="card-text" style="color: #F26419;">
+                            Products:<hr>
+                            {% for position in order.getCartPositions() %}
+                                <span>{{ position.getQuantity() }} x {{ position.getProduct().getName() }} ({{ position.getProduct().getPrice() }}$) = {{ position.getProduct().getPrice() * position.getQuantity() }}$</span><hr>
+                            {% endfor %}
+                        </p>
+                        <p class="card-text" style="color: #F26419;">Order amount: {{ amount }}$</p>
+                    </div>
+                </div>
+            </div>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <div class="mb-3 status">
+                    <select class="form-select" aria-label="Default select example" name="status" id="selectStatus"
+                            autocomplete="status">
+                        {% for status in statuses %}
+                            <option value="{{ status.getId() }}"
+                                    {% if status.getId() == statusId %}
+                                        selected
+                                    {% endif %}
+                            >{{ status.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            {% else %}
+                 <button type="submit" class="btn btn-danger">Remove</button>
+            {% endif %}
+            <a href="{{ path('app_orders') }}" class="btn btn-outline-danger">Back</a>
+        </form>
+
+    </div>
+{% endblock %}

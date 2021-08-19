@@ -25,35 +25,24 @@ class OrdersController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        if(in_array("ROLE_ADMIN", $this->getUser()->getRoles())){
-            return $this->allOrders($request);
-        }
-        $user = $this->getActualUser();
-        $ordersRepo = $this->getDoctrine()->getRepository(Order::class);
-        $orders = $ordersRepo->findByUserId($user->getId());
-
-        return $this->render('orders/index.html.twig', [
-            'orders' => $orders,
-        ]);
-    }
-
-    /**
-     * @Route("/all-orders", name="all_orders")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function allOrders(Request $request): Response
-    {
-        $ordersRepo = $this->getDoctrine()->getRepository(Order::class);
-
+        $statuses = null;
         $id = $request->query->get('status');
-        if($id != null && $id != 0){
-            $orders = $ordersRepo->findByStatusId($id);
-        }else{
-            $orders = $ordersRepo->findAll();
-        }
+        $ordersRepo = $this->getDoctrine()->getRepository(Order::class);
 
-        $repo =  $this->getDoctrine()->getRepository(Status::class);
-        $statuses = $repo->findAll();
+        if(in_array("ROLE_ADMIN", $this->getUser()->getRoles())){
+
+            if($id != null && $id != 0){
+                $orders = $ordersRepo->findByStatusId($id);
+            }else{
+                $orders = $ordersRepo->findAll();
+            }
+            $repo =  $this->getDoctrine()->getRepository(Status::class);
+            $statuses = $repo->findAll();
+
+        }else{
+            $user = $this->getActualUser();
+            $orders = $ordersRepo->findByUserId($user->getId());
+        }
 
         return $this->render('orders/all-orders.html.twig', [
             'orders' => $orders,
@@ -109,68 +98,57 @@ class OrdersController extends AbstractController
     }
 
     /**
-     * @Route("/remove-order/{id}", name="remove_order")
+     * @Route("/order-details/{id}", name="order_details")
      * @IsGranted("ROLE_USER")
      */
-    public function removeOrder(Request $request, Order $order, NotyfFactory $flasher): Response
-    {
-
-        $user = $this->getActualUser();
-
-        if(!$user->getOrders()->contains($order)){
-            return $this->redirectToRoute('app_orders');
-        }
-
-        if($request->getMethod() == Request::METHOD_GET){
-            return $this->render('orders/delete.html.twig', [
-                'order' => $order,
-            ]);
-        }else{
-            $entityManager = $this->getDoctrine()->getManager();
-            $statusRepo = $this->getDoctrine()->getRepository(Status::class);
-            $status = $statusRepo->find(4);
-
-            $order->setArchived(true);
-            $order->setStatus($status);
-            $entityManager->flush();
-
-            $flasher->addSuccess('Data has been deleted successfully!');
-            return $this->redirectToRoute('app_orders');
-        }
-    }
-
-    /**
-     * @Route("/edit-order/{id}", name="edit_order")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function editOrder(Request $request, Order $order, NotyfFactory $flasher): Response
+    public function orderDetails(Request $request, Order $order, NotyfFactory $flasher): Response
     {
 
         if($request->getMethod() == Request::METHOD_GET){
 
             $repo =  $this->getDoctrine()->getRepository(Status::class);
             $statuses = $repo->findAll();
+            $amount = 0;
 
-            return $this->render('orders/edit.html.twig', [
+            foreach ($order -> getCartPositions() as $cartPosition){
+                $amount += $cartPosition->getProduct()->getPrice() * $cartPosition->getQuantity();
+            }
+
+            return $this->render('orders/details.html.twig', [
                 'order' => $order,
-                'statuses' => $statuses
+                'statuses' => $statuses,
+                'amount' => $amount,
+                'statusId' => $order->getStatus()->getId()
             ]);
         }else{
+
             $entityManager = $this->getDoctrine()->getManager();
-            $statusId = $request->request->get('status');
             $statusRepo = $this->getDoctrine()->getRepository(Status::class);
-            $status = $statusRepo->find($statusId);
 
-            if($statusId == 3 || $statusId == 4) {
-                $order->setArchived(true);
+            if(in_array("ROLE_ADMIN", $this->getUser()->getRoles())){
+                $statusId = $request->request->get('status');
+                $status = $statusRepo->find($statusId);
+
+                if($statusId == 3 || $statusId == 4) {
+                    $order->setArchived(true);
+                }else{
+                    $order->setArchived(false);
+                }
+                $order->setStatus($status);
+
+                $entityManager->flush();
+
+                $flasher->addSuccess('Status has been changed successfully!');
             }else{
-                $order->setArchived(false);
+                $status = $statusRepo->find(4);
+
+                $order->setArchived(true);
+                $order->setStatus($status);
+                $entityManager->flush();
+
+                $flasher->addSuccess('Order has been removed successfully!');
             }
-            $order->setStatus($status);
 
-            $entityManager->flush();
-
-            $flasher->addSuccess('Status has been changed successfully!');
             return $this->redirectToRoute('app_orders');
         }
     }
