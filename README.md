@@ -25,3 +25,9 @@ ALTER USER 'default'@'%' IDENTIFIED WITH mysql_native_password BY 'secret';<br>*
 13. symfony console doctrine:migrations:migrate
 14. symfony serve
 15. Strona będzie dostępna pod **_localhost:8000_**
+
+### W przypadku problemów:
+
+1. 404 przy odpalaniu - php bin/console cache:clear --env=prod
+2. Nie widać zmian CSS - CTRL + F5
+3. Nie zatrzymuje się lokalny serwer - symfony server:stop
