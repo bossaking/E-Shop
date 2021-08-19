@@ -3,7 +3,7 @@
 3. Dodać C:\php do PATH
 4. W pliku php.ini usunąć średnik przed **_extension=pdo_mysql_**
 5. Pobrać i zainstalować [MySQL Connector (MSI Installer)](https://dev.mysql.com/downloads/connector/odbc/)
-6. W procesie konfiguracji serwera MySQL utworzyć użytkownika o nazwie 'root' z hasłem 'root'
+6. W procesie konfiguracji serwera MySQL utworzyć użytkownika o nazwie **_'root'_** z hasłem **_'root'_**
 7. Do pliku **_my.ini_** dodać:
 
 **[mysqld]**<br>
