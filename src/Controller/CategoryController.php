@@ -62,6 +62,7 @@ class CategoryController extends AbstractController
                 $category = new Category();
                 $category->setName($name);
                 $category->setDescription($description);
+                $category->setAvailable(true);
 
                 $entityManager->persist($category);
                 $entityManager->flush();
@@ -135,16 +136,17 @@ class CategoryController extends AbstractController
         }else{
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($category);
-            try{
-                $entityManager->flush();
-            }catch(ForeignKeyConstraintViolationException $ex) {
-                $flasher->addError("Cannot delete the category. Firstly you need to delete all products in this category.");
-                return $this->render('category/delete.html.twig', [
-                    'category' => $category
-                ]);
-            }
 
+            foreach ($category->getProducts() as $product) {
+                if($product->getAvailable()){
+                    $flasher->addError("Cannot delete the category. Firstly you need to delete all products in this category.");
+                    return $this->render('category/delete.html.twig', [
+                        'category' => $category
+                    ]);
+                }
+            }
+            $category->setAvailable(false);
+            $entityManager->flush();
 
             $flasher->addSuccess('Data has been deleted successfully!');
             return $this->redirectToRoute('app_categories');
