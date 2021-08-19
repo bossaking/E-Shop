@@ -35,6 +35,11 @@ final class Version20210819092107 extends AbstractMigration
         // PASSWORD user3
         $this->addSql('INSERT INTO user (email, roles, password) VALUES (\'user3@user.com\', \'[""]\' ,\'$2y$13$C3xnC7dhKjGltwWQ/ZQmpuvxz5Kfevpuj2E5Z38aQe9sp7E4rwROq\')');
 
+        $this->addSql('INSERT INTO status (name) values (\'In progress\')');
+        $this->addSql('INSERT INTO status (name) values (\'Received\')');
+        $this->addSql('INSERT INTO status (name) values (\'Delivered\')');
+        $this->addSql('INSERT INTO status (name) values (\'Canceled\')');
+
         $this->addSql('ALTER TABLE cart_position ADD CONSTRAINT FK_D8B3AB9EA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE cart_position ADD CONSTRAINT FK_D8B3AB9E4584665A FOREIGN KEY (product_id) REFERENCES product (id)');
         $this->addSql('ALTER TABLE cart_position ADD CONSTRAINT FK_D8B3AB9E13002253 FOREIGN KEY (cart_order_id) REFERENCES `order` (id)');
